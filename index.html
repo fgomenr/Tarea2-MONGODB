@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        table{
+            margin-top: 20px;
+        }
+    </style>
+    <script>
+        window.addEventListener("load", () => {
+
+            fetch("/leer")
+                .then((res) => res.json())
+                .then((res) => {
+                    document.getElementById("datos").innerHTML="";
+
+                    let json = JSON.parse(res);
+                    console.log(json);
+
+
+                    document.getElementById("datos").innerHTML+=`<tr style="border: 2px solid black; border-collapse: collapse;" > <th style="border: 2px solid black; border-collapse: collapse;"> ID </th> <th style="border: 2px solid black; border-collapse: collapse;"> Nombre </th> </tr>`;
+                        
+                    json.forEach(element => {
+                        console.log(element);
+
+                        document.getElementById("datos").innerHTML+=`<tr style="border: 2px solid black; border-collapse: collapse;" > <td style="border: 2px solid black; border-collapse: collapse;"> ${element._id} </td> <td style="border: 2px solid black; border-collapse: collapse;">${element.nombre} </td> </tr>`;
+
+                    });
+                });
+
+            document.getElementById("insertar").addEventListener("click", () => {
+
+                let nombre = document.getElementById("nombre").value
+                console.log(nombre);
+                let apellidos = document.getElementById("apellidos").value
+                let data = JSON.stringify({ nombre: nombre, apellidos: apellidos });
+                console.log(data);
+                fetch("/insertar", {
+                    method: 'POST', // *GET, POST, PUT, DELETE, etc.
+                    headers: {
+                        'Content-Type': 'application/json'
+                        // 'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: data // body data type must match "Content-Type" header
+                }).catch(e => console.log(e));
+
+                fetch("/leer")
+                .then((res) => res.json())
+                .then((res) => {
+                    document.getElementById("datos").innerHTML="";
+
+                    let json = JSON.parse(res);
+                    console.log(json);
+
+
+                    document.getElementById("datos")
+                    .innerHTML+=`<tr style="border: 2px solid black; border-collapse: collapse;" > 
+                            <th style="border: 2px solid black; border-collapse: collapse;"> ID </th> 
+                            <th style="border: 2px solid black; border-collapse: collapse;"> Nombre </th> 
+                        </tr>`;
+                        
+                    json.forEach(element => {
+                        console.log(element);
+
+                        document.getElementById("datos")
+                        .innerHTML+=`<tr style="border: 2px solid black; border-collapse: collapse;" > 
+                                        <td style="border: 2px solid black; border-collapse: collapse;"> ${element._id} </td>
+                                        <td style="border: 2px solid black; border-collapse: collapse;">${element.nombre} </td>
+                                     </tr>`; 
+
+                    });
+                });
+            });
+
+            
+        });
+    </script>
+</head>
+
+<body>
+    <label for="">Nombre</label>
+    <input type="text" name="nombre" id="nombre">
+    <label for="">Apellidos</label>
+    <input type="text" name="apellidos" id="apellidos">
+    <button id="insertar">Insertar Datos</button>
+
+    <div >
+        <table id="datos" style="border: 2px solid black; border-collapse: collapse;">
+
+
+        </table>    
+
+
+    </div>
+</body>
+
+</html>
